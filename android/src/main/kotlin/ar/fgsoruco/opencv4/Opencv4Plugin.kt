@@ -310,6 +310,34 @@ class Opencv4Plugin: FlutterPlugin, MethodCallHandler {
           result.error("OpenCV-Error", "Android: "+e.message, e)
         }
       }
+      "cartoonFilter" -> {
+        try {
+          CartoonFilterFactory.process(
+                  call.argument<Int>("pathType") as Int,
+                  call.argument<String>("pathString") as String,
+                  call.argument<Double>("imageScaling") as Double,
+                  call.argument<Int>("blurringKernelSize") as Int,
+                  call.argument<Int>("adaptiveThresholdMaxValue") as Int,
+                  call.argument<Int>("adaptiveMethod") as Int,
+                  call.argument<Int>("thresholdType") as Int,
+                  call.argument<Int>("adaptiveBlockSize") as Int,
+                  call.argument<Int>("adaptiveConstantSubtracted") as Int,
+                  call.argument<Int>("bilateralDiameter") as Int,
+                  call.argument<Int>("bilateralSigmaColor") as Int,
+                  call.argument<Int>("bilateralSigmaSpace") as Int,
+                  call.argument<Int>("bilateralBorderType") as Int,
+                  call.argument<Int>("termCriteriaType") as Int,
+                  call.argument<Int>("termCriteriaMaxCount") as Int,
+                  call.argument<Double>("termCriteriaEpsilon") as Double,
+                  call.argument<Int>("pyrMeanShiftFilteringSp") as Int,
+                  call.argument<Int>("pyrMeanShiftFilteringSr") as Int,
+                  call.argument<Int>("pyrMeanShiftFilteringMaxLevel") as Int,
+                  call.argument<ByteArray>("data") as ByteArray,
+                  result)
+        } catch (e: Exception) {
+          result.error("OpenCV-Error", "Android: "+e.message, e)
+        }
+      }
 
       else -> result.notImplemented()
     }

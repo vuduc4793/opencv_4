@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:opencv_4/factory/colormaps/applycolormap_factory.dart';
 import 'package:opencv_4/factory/colorspace/cvtcolor_factory.dart';
 import 'package:opencv_4/factory/imagefilter/bilateralfilter_factory.dart';
+import 'package:opencv_4/factory/imagefilter/cartoon_filter_factory.dart';
 import 'package:opencv_4/factory/imagefilter/blur_factory.dart';
 import 'package:opencv_4/factory/imagefilter/boxfilter_factory.dart';
 import 'package:opencv_4/factory/imagefilter/dilate_factory.dart';
@@ -25,6 +26,11 @@ import 'package:opencv_4/factory/pathfrom.dart';
 
 /// class that contains the implementation of OpenCV modules
 class Cv2 {
+  /// Constants util for [TermCriteriaType] params
+  static const int TERM_CRITERIA_TYPE_COUNT = 1, // the maximum number of iterations or elements to compute
+  TERM_CRITERIA_TYPE_MAX_ITER = TERM_CRITERIA_TYPE_COUNT, // ditto
+  TERM_CRITERIA_TYPE_EPS = 2; // the desired accuracy or change in parameters at which the iterative algorithm stops
+
   /// Constants util for [borderType] params
   static const int BORDER_CONSTANT = 0,
       BORDER_REPLICATE = 1,
@@ -333,6 +339,55 @@ class Cv2 {
       sigmaColor: sigmaColor,
       sigmaSpace: sigmaSpace,
       borderType: borderType,
+    );
+
+    /// Function returns the response from method channel
+    return result;
+  }
+
+  /// [cartoonFilter] function of Module: Image Filtering
+  static Future<Uint8List?> cartoonFilter({
+    CVPathFrom pathFrom = CVPathFrom.ASSETS,
+    required String pathString,
+    required double imageScaling,
+    required int blurringKernelSize,
+    required int adaptiveThresholdMaxValue,
+    required int adaptiveMethod,
+    required int thresholdType,
+    required int adaptiveBlockSize,
+    required int adaptiveConstantSubtracted,
+    required int bilateralDiameter,
+    required int bilateralSigmaColor,
+    required int bilateralSigmaSpace,
+    required int bilateralBorderType,
+    required int termCriteriaType,
+    required int termCriteriaMaxCount,
+    required double termCriteriaEpsilon,
+    required int pyrMeanShiftFilteringSp,
+    required int pyrMeanShiftFilteringSr,
+    required int pyrMeanShiftFilteringMaxLevel,
+  }) async {
+    /// Variable to store operation result
+    final Uint8List? result = await CartoonFilterFactory.cartoonFilter(
+      pathFrom: pathFrom,
+      pathString: pathString,
+      imageScaling: imageScaling,
+      blurringKernelSize: blurringKernelSize,
+      adaptiveThresholdMaxValue: adaptiveThresholdMaxValue,
+      adaptiveMethod: adaptiveMethod,
+      thresholdType: thresholdType,
+      adaptiveBlockSize: adaptiveBlockSize,
+      adaptiveConstantSubtracted: adaptiveConstantSubtracted,
+      bilateralDiameter:bilateralDiameter,
+      bilateralSigmaColor: bilateralSigmaColor,
+      bilateralSigmaSpace: bilateralSigmaSpace,
+      bilateralBorderType: bilateralBorderType,
+      termCriteriaType: termCriteriaType,
+      termCriteriaMaxCount: termCriteriaMaxCount,
+      termCriteriaEpsilon: termCriteriaEpsilon,
+      pyrMeanShiftFilteringSp: pyrMeanShiftFilteringSp,
+      pyrMeanShiftFilteringSr: pyrMeanShiftFilteringSr,
+      pyrMeanShiftFilteringMaxLevel: pyrMeanShiftFilteringMaxLevel,
     );
 
     /// Function returns the response from method channel

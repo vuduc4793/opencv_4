@@ -2,6 +2,7 @@
 #import "ApplyColorMapFactory.h"
 #import "CvtColorFactory.h"
 #import "BilateralFilterFactory.h"
+#import "CartoonFilterFactory.h"
 #import "BlurFactory.h"
 #import "BoxFilterFactory.h"
 #import "DilateFactory.h"
@@ -45,6 +46,52 @@
         int borderType = [call.arguments[@"borderType"] intValue];
 
         [BilateralFilterFactory processWhitPathType:pathType pathString:pathString data:data diameter:diameter sigmaColor:sigmaColor sigmaSpace:sigmaSpace borderType:borderType result:result];
+
+    }
+    else if ([@"cartoonFilter" isEqualToString:call.method]) {
+
+        int pathType = [call.arguments[@"pathType"] intValue];
+        NSString* pathString = call.arguments[@"pathString"];
+        double imageScaling = [call.arguments[@"imageScaling"] doubleValue];
+        int blurringKernelSize = [call.arguments[@"blurringKernelSize"] intValue];
+        int adaptiveThresholdMaxValue = [call.arguments[@"adaptiveThresholdMaxValue"] intValue];
+        int adaptiveMethod = [call.arguments[@"adaptiveMethod"] intValue];
+        int thresholdType = [call.arguments[@"thresholdType"] intValue];
+        int adaptiveBlockSize = [call.arguments[@"adaptiveBlockSize"] intValue];
+        int adaptiveConstantSubtracted = [call.arguments[@"adaptiveConstantSubtracted"] intValue];
+        int bilateralDiameter = [call.arguments[@"bilateralDiameter"] intValue];
+        int bilateralSigmaColor = [call.arguments[@"bilateralSigmaColor"] intValue];
+        int bilateralSigmaSpace = [call.arguments[@"bilateralSigmaSpace"] intValue];
+        int bilateralBorderType = [call.arguments[@"bilateralBorderType"] intValue];
+        int termCriteriaType = [call.arguments[@"termCriteriaType"] intValue];
+        int termCriteriaMaxCount = [call.arguments[@"termCriteriaMaxCount"] intValue];
+        double termCriteriaEpsilon = [call.arguments[@"termCriteriaEpsilon"] doubleValue];
+        int pyrMeanShiftFilteringSp = [call.arguments[@"pyrMeanShiftFilteringSp"] intValue];
+        int pyrMeanShiftFilteringSr = [call.arguments[@"pyrMeanShiftFilteringSr"] intValue];
+        int pyrMeanShiftFilteringMaxLevel = [call.arguments[@"pyrMeanShiftFilteringMaxLevel"] intValue];
+        FlutterStandardTypedData* data = call.arguments[@"data"];
+
+        [CartoonFilterFactory processWhitPathType: pathType
+                                       pathString: pathString
+                                     imageScaling: imageScaling
+                               blurringKernelSize: blurringKernelSize
+                        adaptiveThresholdMaxValue: adaptiveThresholdMaxValue
+                                   adaptiveMethod: adaptiveMethod
+                                    thresholdType: thresholdType
+                                adaptiveBlockSize: adaptiveBlockSize
+                       adaptiveConstantSubtracted: adaptiveConstantSubtracted
+                                bilateralDiameter: bilateralDiameter
+                              bilateralSigmaColor: bilateralSigmaColor
+                              bilateralSigmaSpace: bilateralSigmaSpace
+                              bilateralBorderType: bilateralBorderType
+                                 termCriteriaType: termCriteriaType
+                             termCriteriaMaxCount: termCriteriaMaxCount
+                              termCriteriaEpsilon: termCriteriaEpsilon
+                          pyrMeanShiftFilteringSp: pyrMeanShiftFilteringSp
+                          pyrMeanShiftFilteringSr: pyrMeanShiftFilteringSr
+                    pyrMeanShiftFilteringMaxLevel: pyrMeanShiftFilteringMaxLevel
+                                             data:data
+                                            result:result];
 
     }
     else if ([@"blur" isEqualToString:call.method]) {
