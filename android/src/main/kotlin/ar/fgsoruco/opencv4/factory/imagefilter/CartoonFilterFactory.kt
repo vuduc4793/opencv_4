@@ -87,7 +87,7 @@ class CartoonFilterFactory {
                 val convertEdge = Mat()
                 val srcColourPalette = Mat()
                 val srcFinalKmeans = Mat()
-                var brighter = Mat()
+                val brighter = Mat()
                 val srcFinal = Mat()
                 Imgproc.resize(src, srcResized, Size(), imageScaling, imageScaling);
                 Imgproc.cvtColor(srcResized, srcBGR, Imgproc.COLOR_BGRA2BGR)
@@ -115,7 +115,7 @@ class CartoonFilterFactory {
 
                 Core.bitwise_and(srcFinalKmeans, srcFinalKmeans, srcFinal, convertEdge)
 
-//                brighter =  Mat(srcFinal.size(), srcFinal.type(), Scalar(80.0))
+
 
                 val matOfByte = MatOfByte()
                 Imgcodecs.imencode(".jpg", srcFinal, matOfByte)
