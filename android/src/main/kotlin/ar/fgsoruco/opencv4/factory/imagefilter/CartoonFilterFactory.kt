@@ -115,10 +115,10 @@ class CartoonFilterFactory {
 
                 Core.bitwise_and(srcFinalKmeans, srcFinalKmeans, srcFinal, convertEdge)
 
-                brighter =  Mat(srcFinal.size(), srcFinal.type(), Scalar(80.0))
+//                brighter =  Mat(srcFinal.size(), srcFinal.type(), Scalar(80.0))
 
                 val matOfByte = MatOfByte()
-                Imgcodecs.imencode(".jpg", brighter, matOfByte)
+                Imgcodecs.imencode(".jpg", srcFinal, matOfByte)
                 byteArray = matOfByte.toArray()
 
                 return byteArray
