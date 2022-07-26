@@ -153,36 +153,32 @@ FlutterStandardTypedData * cartoonFilterS(NSString * pathString,
         
         cv::Mat dst;
         cv::Mat srcResized;
-        cv::Mat srcBGR;
         cv::Mat srcGray;
         cv::Mat srcGrayBlur;
         cv::Mat srcEdge;
-        cv::Mat srcColourPalette;
-        cv::Mat srcFinalKmeans;
+        cv::Mat srcMask;
+        cv::Mat srcCartoon;
         cv::Mat srcFinal;
         cv::resize(src, srcResized, cv::Size(), imageScaling, imageScaling);
-        cv::cvtColor(srcResized, srcBGR, cv::COLOR_BGRA2BGR);
+        cv::cvtColor(srcResized, srcCartoon, cv::COLOR_BGRA2BGR, 0);
         // Convert the image to Gray
         cv::cvtColor(srcResized, srcGray, cv::COLOR_BGR2GRAY);
         // Gray blur apply
-        cv::medianBlur(srcGray, srcGrayBlur, blurringKernelSize);
+        cv::medianBlur(srcGray, srcGrayBlur, 5);
         // Convert the image to edge
-        cv::adaptiveThreshold(srcGrayBlur, srcEdge, (double) adaptiveThresholdMaxValue, adaptiveMethod, thresholdType, adaptiveBlockSize, (double) adaptiveConstantSubtracted);
-        //color_quantization
-//        colorQuantization(srcBGR, srcFinalKmeans, 9, 10);
-        cv::TermCriteria termCriteria = cv::TermCriteria(termCriteriaType,
-                                                         termCriteriaMaxCount,
-                                                         termCriteriaEpsilon);
-        cv::pyrMeanShiftFiltering(srcBGR,
-                                  srcFinalKmeans,
-                                  pyrMeanShiftFilteringSp,
-                                  pyrMeanShiftFilteringSr,
-                                  pyrMeanShiftFilteringMaxLevel,
-                                  termCriteria);
+        cv::Canny(srcGrayBlur, srcEdge, 80.0, 160.0, 3);
+        // create mask
+        cv::threshold(srcEdge, srcMask, 100.0, 255.0, cv::THRESH_BINARY_INV);
+        cv::cvtColor(srcMask, srcMask, cv::COLOR_GRAY2BGR);
+        //color_quantization cartoon
         
-        cv::Mat convertEdge;
-        cv::bilateralFilter(srcEdge, convertEdge, bilateralDiameter, (double) bilateralSigmaColor,(double) bilateralSigmaSpace);
-        cv::bitwise_and(srcFinalKmeans, srcFinalKmeans, srcFinal, convertEdge);
+        for (int count = 1; count <= 11; ++count){
+            cv::Mat tempCartoon;
+            cv::bilateralFilter(srcCartoon, tempCartoon, 24, 15.0, 20.0, cv::BORDER_DEFAULT);
+            cv::cvtColor(tempCartoon, srcCartoon, cv::COLOR_BGRA2BGR, 0);
+        }
+
+        cv::bitwise_and(srcCartoon, srcMask, srcFinal);
         
         NSData *data = [NSData dataWithBytes:srcFinal.data length:srcFinal.elemSize()*srcFinal.total()];
         

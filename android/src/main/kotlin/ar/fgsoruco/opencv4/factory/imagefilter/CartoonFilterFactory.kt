@@ -80,42 +80,36 @@ class CartoonFilterFactory {
                 val filename = pathString.replace("file://", "")
                 val src = Imgcodecs.imread(filename)
                 val srcResized = Mat()
-                val srcBGR = Mat()
                 val srcGray = Mat()
                 val srcGrayBlur = Mat()
                 val srcEdge = Mat()
-                val convertEdge = Mat()
-                val srcColourPalette = Mat()
-                val srcFinalKmeans = Mat()
-                val brighter = Mat()
+                val srcMask = Mat()
+                val srcCartoon = Mat()
+
                 val srcFinal = Mat()
+
+                // resize raw image
                 Imgproc.resize(src, srcResized, Size(), imageScaling, imageScaling);
-                Imgproc.cvtColor(srcResized, srcBGR, Imgproc.COLOR_BGRA2BGR)
-                // cartoonize
-                // Convert the image to Gray
-                Imgproc.cvtColor(srcResized, srcGray, Imgproc.COLOR_BGR2GRAY)
+                Imgproc.cvtColor(srcResized, srcCartoon, Imgproc.COLOR_BGRA2BGR, 0)
+                // convert to gray
+                Imgproc.cvtColor(srcResized, srcGray, Imgproc.COLOR_RGB2GRAY)
+                // blur image
+                Imgproc.medianBlur(srcGray, srcGrayBlur, 5)
+                // detect egde
+                Imgproc.Canny(srcGrayBlur , srcEdge, 80.0, 160.0, 3)
+                // create mask
+                Imgproc.threshold(srcEdge, srcMask, 100.0,255.0, Imgproc.THRESH_BINARY_INV)
+                Imgproc.cvtColor(srcMask, srcMask, Imgproc.COLOR_GRAY2BGR)
+                // cartoon
+                val iterator = (1..11).iterator()
 
-                // Gray blur apply
-                Imgproc.medianBlur(srcGray, srcGrayBlur, blurringKernelSize)
+                iterator.forEach {
+                    val tempCartoon = Mat()
+                    Imgproc.bilateralFilter(srcCartoon, tempCartoon, 24, 15.0, 20.0, Core.BORDER_DEFAULT)
+                    Imgproc.cvtColor(tempCartoon, srcCartoon, Imgproc.COLOR_BGRA2BGR, 0)
+                }
 
-                // Convert the image to edge
-                Imgproc.adaptiveThreshold(srcGrayBlur,
-                        srcEdge,
-                        adaptiveThresholdMaxValue.toDouble(),
-                        adaptiveMethod,
-                        thresholdType,
-                        adaptiveBlockSize,
-                        adaptiveConstantSubtracted.toDouble())
-
-                //color_quantization
-                val termCriteria = TermCriteria(termCriteriaType, termCriteriaMaxCount, termCriteriaEpsilon)
-                Imgproc.pyrMeanShiftFiltering(srcBGR, srcFinalKmeans, pyrMeanShiftFilteringSp.toDouble(), pyrMeanShiftFilteringSr.toDouble(), pyrMeanShiftFilteringMaxLevel, termCriteria)
-
-                Imgproc.bilateralFilter(srcEdge, convertEdge, bilateralDiameter, bilateralSigmaColor.toDouble(), bilateralSigmaSpace.toDouble(), bilateralBorderType)
-
-                Core.bitwise_and(srcFinalKmeans, srcFinalKmeans, srcFinal, convertEdge)
-
-
+                Core.bitwise_and(srcCartoon, srcMask, srcFinal)
 
                 val matOfByte = MatOfByte()
                 Imgcodecs.imencode(".jpg", srcFinal, matOfByte)
