@@ -18,21 +18,17 @@ NS_ASSUME_NONNULL_BEGIN
                     pathString: (NSString *) pathString
                     imageScaling: (double) imageScaling
                     blurringKernelSize: (int) blurringKernelSize
-                    adaptiveThresholdMaxValue: (int) adaptiveThresholdMaxValue
-                    adaptiveMethod: (int) adaptiveMethod
-                    thresholdType: (int) thresholdType
-                    adaptiveBlockSize: (int) adaptiveBlockSize
-                    adaptiveConstantSubtracted: (int) adaptiveConstantSubtracted
-                    bilateralDiameter: (int) bilateralDiameter
-                    bilateralSigmaColor: (int) bilateralSigmaColor
-                    bilateralSigmaSpace: (int) bilateralSigmaSpace
-                    bilateralBorderType: (int) bilateralBorderType
-                    termCriteriaType: (int) termCriteriaType
-                    termCriteriaMaxCount: (int) termCriteriaMaxCount
-                    termCriteriaEpsilon: (double) termCriteriaEpsilon
-                    pyrMeanShiftFilteringSp: (int) pyrMeanShiftFilteringSp
-                    pyrMeanShiftFilteringSr: (int) pyrMeanShiftFilteringSr
-                    pyrMeanShiftFilteringMaxLevel: (int) pyrMeanShiftFilteringMaxLevel
+                    lowEdge: (double) lowEdge
+                    highEdge: (double) highEdge
+                    edgeKSize: (int) edgeKSize
+                    maskThresholdValue: (double) maskThresholdValue
+                    maskThresholdMaxValue: (double) maskThresholdMaxValue
+                    maskThresholdType: (int) maskThresholdType
+                    colorQuantizationDiameter: (int) colorQuantizationDiameter
+                    smoothlyDiameter: (int) smoothlyDiameter
+                    smoothlySigmaColor: (double) smoothlySigmaColor
+                    smoothlySigmaSpace: (double) smoothlySigmaSpace
+                    smoothlyBorderType: (int) smoothlyBorderType
                     data: (FlutterStandardTypedData *) data
                     result: (FlutterResult) result;
 

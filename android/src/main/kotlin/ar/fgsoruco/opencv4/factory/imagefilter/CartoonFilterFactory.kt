@@ -15,42 +15,34 @@ class CartoonFilterFactory {
                     pathString: String,
                     imageScaling: Double,
                     blurringKernelSize: Int,
-                    adaptiveThresholdMaxValue: Int,
-                    adaptiveMethod: Int,
-                    thresholdType: Int,
-                    adaptiveBlockSize: Int,
-                    adaptiveConstantSubtracted: Int,
-                    bilateralDiameter:Int,
-                    bilateralSigmaColor: Int,
-                    bilateralSigmaSpace:Int,
-                    bilateralBorderType: Int,
-                    termCriteriaType: Int,
-                    termCriteriaMaxCount: Int,
-                    termCriteriaEpsilon: Double,
-                    pyrMeanShiftFilteringSp: Int,
-                    pyrMeanShiftFilteringSr: Int,
-                    pyrMeanShiftFilteringMaxLevel: Int,
+                    lowEdge: Double,
+                    highEdge: Double,
+                    edgeKSize: Int,
+                    maskThresholdValue: Double,
+                    maskThresholdMaxValue: Double,
+                    maskThresholdType:Int,
+                    colorQuantizationDiameter: Int,
+                    smoothlyDiameter:Int,
+                    smoothlySigmaColor: Double,
+                    smoothlySigmaSpace: Double,
+                    smoothlyBorderType: Int,
                     data: ByteArray,
                     result: MethodChannel.Result) {
             when (pathType) {
                 1 -> result.success(cartoonFilterS(pathString,
                         imageScaling,
                         blurringKernelSize,
-                        adaptiveThresholdMaxValue,
-                        adaptiveMethod,
-                        thresholdType,
-                        adaptiveBlockSize,
-                        adaptiveConstantSubtracted,
-                        bilateralDiameter,
-                        bilateralSigmaColor,
-                        bilateralSigmaSpace,
-                        bilateralBorderType,
-                        termCriteriaType,
-                        termCriteriaMaxCount,
-                        termCriteriaEpsilon,
-                        pyrMeanShiftFilteringSp,
-                        pyrMeanShiftFilteringSr,
-                        pyrMeanShiftFilteringMaxLevel
+                        lowEdge,
+                        highEdge,
+                        edgeKSize,
+                        maskThresholdValue,
+                        maskThresholdMaxValue,
+                        maskThresholdType,
+                        colorQuantizationDiameter,
+                        smoothlyDiameter,
+                        smoothlySigmaColor,
+                        smoothlySigmaSpace,
+                        smoothlyBorderType
                 ))
             }
         }
@@ -58,21 +50,17 @@ class CartoonFilterFactory {
         private fun cartoonFilterS(pathString: String,
                                    imageScaling: Double,
                                    blurringKernelSize: Int,
-                                   adaptiveThresholdMaxValue: Int,
-                                   adaptiveMethod: Int,
-                                   thresholdType: Int,
-                                   adaptiveBlockSize: Int,
-                                   adaptiveConstantSubtracted: Int,
-                                   bilateralDiameter:Int,
-                                   bilateralSigmaColor: Int,
-                                   bilateralSigmaSpace:Int,
-                                   bilateralBorderType: Int,
-                                   termCriteriaType: Int,
-                                   termCriteriaMaxCount: Int,
-                                   termCriteriaEpsilon: Double,
-                                   pyrMeanShiftFilteringSp: Int,
-                                   pyrMeanShiftFilteringSr: Int,
-                                   pyrMeanShiftFilteringMaxLevel: Int): ByteArray? {
+                                   lowEdge: Double,
+                                   highEdge: Double,
+                                   edgeKSize: Int,
+                                   maskThresholdValue: Double,
+                                   maskThresholdMaxValue: Double,
+                                   maskThresholdType:Int,
+                                   colorQuantizationDiameter: Int,
+                                   smoothlyDiameter:Int,
+                                   smoothlySigmaColor: Double,
+                                   smoothlySigmaSpace: Double,
+                                   smoothlyBorderType: Int): ByteArray? {
             val inputStream: InputStream = FileInputStream(pathString.replace("file://", ""))
             val data: ByteArray = inputStream.readBytes()
             try {
@@ -94,18 +82,18 @@ class CartoonFilterFactory {
                 // convert to gray
                 Imgproc.cvtColor(srcResized, srcGray, Imgproc.COLOR_RGB2GRAY)
                 // blur image
-                Imgproc.medianBlur(srcGray, srcGrayBlur, 5)
+                Imgproc.medianBlur(srcGray, srcGrayBlur, blurringKernelSize)
                 // detect egde
-                Imgproc.Canny(srcGrayBlur , srcEdge, 80.0, 160.0, 3)
+                Imgproc.Canny(srcGrayBlur , srcEdge, lowEdge, highEdge, edgeKSize)
                 // create mask
-                Imgproc.threshold(srcEdge, srcMask, 100.0,255.0, Imgproc.THRESH_BINARY_INV)
+                Imgproc.threshold(srcEdge, srcMask, maskThresholdValue,maskThresholdMaxValue, maskThresholdType)
                 Imgproc.cvtColor(srcMask, srcMask, Imgproc.COLOR_GRAY2BGR)
                 // cartoon
-                val iterator = (1..11).iterator()
+                val iterator = (1..colorQuantizationDiameter).iterator()
 
                 iterator.forEach {
                     val tempCartoon = Mat()
-                    Imgproc.bilateralFilter(srcCartoon, tempCartoon, 24, 15.0, 20.0, Core.BORDER_DEFAULT)
+                    Imgproc.bilateralFilter(srcCartoon, tempCartoon, smoothlyDiameter, smoothlySigmaColor, smoothlySigmaSpace, smoothlyBorderType)
                     Imgproc.cvtColor(tempCartoon, srcCartoon, Imgproc.COLOR_BGRA2BGR, 0)
                 }
 

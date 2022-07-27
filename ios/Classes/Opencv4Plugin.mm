@@ -54,42 +54,34 @@
         NSString* pathString = call.arguments[@"pathString"];
         double imageScaling = [call.arguments[@"imageScaling"] doubleValue];
         int blurringKernelSize = [call.arguments[@"blurringKernelSize"] intValue];
-        int adaptiveThresholdMaxValue = [call.arguments[@"adaptiveThresholdMaxValue"] intValue];
-        int adaptiveMethod = [call.arguments[@"adaptiveMethod"] intValue];
-        int thresholdType = [call.arguments[@"thresholdType"] intValue];
-        int adaptiveBlockSize = [call.arguments[@"adaptiveBlockSize"] intValue];
-        int adaptiveConstantSubtracted = [call.arguments[@"adaptiveConstantSubtracted"] intValue];
-        int bilateralDiameter = [call.arguments[@"bilateralDiameter"] intValue];
-        int bilateralSigmaColor = [call.arguments[@"bilateralSigmaColor"] intValue];
-        int bilateralSigmaSpace = [call.arguments[@"bilateralSigmaSpace"] intValue];
-        int bilateralBorderType = [call.arguments[@"bilateralBorderType"] intValue];
-        int termCriteriaType = [call.arguments[@"termCriteriaType"] intValue];
-        int termCriteriaMaxCount = [call.arguments[@"termCriteriaMaxCount"] intValue];
-        double termCriteriaEpsilon = [call.arguments[@"termCriteriaEpsilon"] doubleValue];
-        int pyrMeanShiftFilteringSp = [call.arguments[@"pyrMeanShiftFilteringSp"] intValue];
-        int pyrMeanShiftFilteringSr = [call.arguments[@"pyrMeanShiftFilteringSr"] intValue];
-        int pyrMeanShiftFilteringMaxLevel = [call.arguments[@"pyrMeanShiftFilteringMaxLevel"] intValue];
+        double lowEdge = [call.arguments[@"lowEdge"] doubleValue];
+        double highEdge = [call.arguments[@"highEdge"] doubleValue];
+        int edgeKSize = [call.arguments[@"edgeKSize"] intValue];
+        double maskThresholdValue = [call.arguments[@"maskThresholdValue"] doubleValue];
+        double maskThresholdMaxValue = [call.arguments[@"maskThresholdMaxValue"] doubleValue];
+        int maskThresholdType = [call.arguments[@"maskThresholdType"] intValue];
+        int colorQuantizationDiameter = [call.arguments[@"colorQuantizationDiameter"] intValue];
+        int smoothlyDiameter = [call.arguments[@"smoothlyDiameter"] intValue];
+        double smoothlySigmaColor = [call.arguments[@"smoothlySigmaColor"] doubleValue];
+        double smoothlySigmaSpace = [call.arguments[@"smoothlySigmaSpace"] doubleValue];
+        int smoothlyBorderType = [call.arguments[@"smoothlyBorderType"] intValue];
         FlutterStandardTypedData* data = call.arguments[@"data"];
 
         [CartoonFilterFactory processWhitPathType: pathType
                                        pathString: pathString
                                      imageScaling: imageScaling
                                blurringKernelSize: blurringKernelSize
-                        adaptiveThresholdMaxValue: adaptiveThresholdMaxValue
-                                   adaptiveMethod: adaptiveMethod
-                                    thresholdType: thresholdType
-                                adaptiveBlockSize: adaptiveBlockSize
-                       adaptiveConstantSubtracted: adaptiveConstantSubtracted
-                                bilateralDiameter: bilateralDiameter
-                              bilateralSigmaColor: bilateralSigmaColor
-                              bilateralSigmaSpace: bilateralSigmaSpace
-                              bilateralBorderType: bilateralBorderType
-                                 termCriteriaType: termCriteriaType
-                             termCriteriaMaxCount: termCriteriaMaxCount
-                              termCriteriaEpsilon: termCriteriaEpsilon
-                          pyrMeanShiftFilteringSp: pyrMeanShiftFilteringSp
-                          pyrMeanShiftFilteringSr: pyrMeanShiftFilteringSr
-                    pyrMeanShiftFilteringMaxLevel: pyrMeanShiftFilteringMaxLevel
+                        lowEdge: lowEdge
+                                   highEdge: highEdge
+                                    edgeKSize: edgeKSize
+                                maskThresholdValue: maskThresholdValue
+                       maskThresholdMaxValue: maskThresholdMaxValue
+                                maskThresholdType: maskThresholdType
+                              colorQuantizationDiameter: colorQuantizationDiameter
+                              smoothlyDiameter: smoothlyDiameter
+                              smoothlySigmaColor: smoothlySigmaColor
+                                 smoothlySigmaSpace: smoothlySigmaSpace
+                             smoothlyBorderType: smoothlyBorderType
                                              data:data
                                             result:result];
 

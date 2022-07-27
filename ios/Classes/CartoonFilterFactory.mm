@@ -9,21 +9,17 @@
                  pathString:(NSString *)pathString
                imageScaling: (double) imageScaling
          blurringKernelSize: (int) blurringKernelSize
-  adaptiveThresholdMaxValue: (int) adaptiveThresholdMaxValue
-             adaptiveMethod: (int) adaptiveMethod
-              thresholdType: (int) thresholdType
-          adaptiveBlockSize: (int) adaptiveBlockSize
- adaptiveConstantSubtracted: (int) adaptiveConstantSubtracted
-          bilateralDiameter: (int) bilateralDiameter
-        bilateralSigmaColor: (int) bilateralSigmaColor
-        bilateralSigmaSpace: (int) bilateralSigmaSpace
-        bilateralBorderType: (int) bilateralBorderType
-           termCriteriaType: (int) termCriteriaType
-       termCriteriaMaxCount: (int) termCriteriaMaxCount
-        termCriteriaEpsilon: (double) termCriteriaEpsilon
-    pyrMeanShiftFilteringSp: (int) pyrMeanShiftFilteringSp
-    pyrMeanShiftFilteringSr: (int) pyrMeanShiftFilteringSr
-pyrMeanShiftFilteringMaxLevel: (int) pyrMeanShiftFilteringMaxLevel
+                    lowEdge: (double) lowEdge
+                   highEdge: (double) highEdge
+                  edgeKSize: (int) edgeKSize
+         maskThresholdValue: (double) maskThresholdValue
+      maskThresholdMaxValue: (double) maskThresholdMaxValue
+          maskThresholdType: (int) maskThresholdType
+  colorQuantizationDiameter: (int) colorQuantizationDiameter
+           smoothlyDiameter: (int) smoothlyDiameter
+         smoothlySigmaColor: (double) smoothlySigmaColor
+         smoothlySigmaSpace: (double) smoothlySigmaSpace
+         smoothlyBorderType: (int) smoothlyBorderType
                        data:(FlutterStandardTypedData *)data
                      result:(FlutterResult)result{
     
@@ -32,21 +28,17 @@ pyrMeanShiftFilteringMaxLevel: (int) pyrMeanShiftFilteringMaxLevel
             result(cartoonFilterS(pathString,
                                   imageScaling,
                                   blurringKernelSize,
-                                  adaptiveThresholdMaxValue,
-                                  adaptiveMethod,
-                                  thresholdType,
-                                  adaptiveBlockSize,
-                                  adaptiveConstantSubtracted,
-                                  bilateralDiameter,
-                                  bilateralSigmaColor,
-                                  bilateralSigmaSpace,
-                                  bilateralBorderType,
-                                  termCriteriaType,
-                                  termCriteriaMaxCount,
-                                  termCriteriaEpsilon,
-                                  pyrMeanShiftFilteringSp,
-                                  pyrMeanShiftFilteringSr,
-                                  pyrMeanShiftFilteringMaxLevel
+                                  lowEdge,
+                                  highEdge,
+                                  edgeKSize,
+                                  maskThresholdValue,
+                                  maskThresholdMaxValue,
+                                  maskThresholdType,
+                                  colorQuantizationDiameter,
+                                  smoothlyDiameter,
+                                  smoothlySigmaColor,
+                                  smoothlySigmaSpace,
+                                  smoothlyBorderType
                                   ));
             break;
         
@@ -59,21 +51,17 @@ pyrMeanShiftFilteringMaxLevel: (int) pyrMeanShiftFilteringMaxLevel
 FlutterStandardTypedData * cartoonFilterS(NSString * pathString,
                                           double imageScaling,
                                           int blurringKernelSize,
-                                          int adaptiveThresholdMaxValue,
-                                          int adaptiveMethod,
-                                          int thresholdType,
-                                          int adaptiveBlockSize,
-                                          int adaptiveConstantSubtracted,
-                                          int bilateralDiameter,
-                                          int bilateralSigmaColor,
-                                          int bilateralSigmaSpace,
-                                          int bilateralBorderType,
-                                          int termCriteriaType,
-                                          int termCriteriaMaxCount,
-                                          double termCriteriaEpsilon,
-                                          int pyrMeanShiftFilteringSp,
-                                          int pyrMeanShiftFilteringSr,
-                                          int pyrMeanShiftFilteringMaxLevel){
+                                          double lowEdge,
+                                          double highEdge,
+                                          int edgeKSize,
+                                          double maskThresholdValue,
+                                          double maskThresholdMaxValue,
+                                          int maskThresholdType,
+                                          int colorQuantizationDiameter,
+                                          int smoothlyDiameter,
+                                          double smoothlySigmaColor,
+                                          double smoothlySigmaSpace,
+                                          int smoothlyBorderType){
     
 
     CGColorSpaceRef colorSpace;
@@ -164,17 +152,17 @@ FlutterStandardTypedData * cartoonFilterS(NSString * pathString,
         // Convert the image to Gray
         cv::cvtColor(srcResized, srcGray, cv::COLOR_BGR2GRAY);
         // Gray blur apply
-        cv::medianBlur(srcGray, srcGrayBlur, 5);
+        cv::medianBlur(srcGray, srcGrayBlur, blurringKernelSize);
         // Convert the image to edge
-        cv::Canny(srcGrayBlur, srcEdge, 80.0, 160.0, 3);
+        cv::Canny(srcGrayBlur, srcEdge, lowEdge, highEdge, edgeKSize);
         // create mask
-        cv::threshold(srcEdge, srcMask, 100.0, 255.0, cv::THRESH_BINARY_INV);
+        cv::threshold(srcEdge, srcMask, maskThresholdValue, maskThresholdMaxValue, maskThresholdType);
         cv::cvtColor(srcMask, srcMask, cv::COLOR_GRAY2BGR);
         //color_quantization cartoon
         
-        for (int count = 1; count <= 11; ++count){
+        for (int count = 1; count <= colorQuantizationDiameter; ++count){
             cv::Mat tempCartoon;
-            cv::bilateralFilter(srcCartoon, tempCartoon, 24, 15.0, 20.0, cv::BORDER_DEFAULT);
+            cv::bilateralFilter(srcCartoon, tempCartoon, smoothlyDiameter, smoothlySigmaColor, smoothlySigmaSpace, smoothlyBorderType);
             cv::cvtColor(tempCartoon, srcCartoon, cv::COLOR_BGRA2BGR, 0);
         }
 
